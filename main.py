@@ -1,13 +1,15 @@
 #first brush-through
 
 import sys
-from PyQt5.QtWidgets import (
-    QApplication, QMainWindow, QFileDialog, QVBoxLayout, QPushButton, QLabel, QWidget, QComboBox, QProgressBar
-)
+import os
+from PyQt5.QtWidgets import (QApplication, QMainWindow, QFileDialog,
+                             QVBoxLayout, QPushButton, QLabel, QWidget,
+                             QComboBox, QProgressBar)
 import subprocess
 
 
 class BootableUSBApp(QMainWindow):
+
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Bootable USB Creator")
@@ -48,7 +50,8 @@ class BootableUSBApp(QMainWindow):
 
     def select_iso_file(self):
         file_dialog = QFileDialog()
-        file_path, _ = file_dialog.getOpenFileName(self, "Select ISO File", "", "ISO Files (*.iso)")
+        file_path, _ = file_dialog.getOpenFileName(self, "Select ISO File", "",
+                                                   "ISO Files (*.iso)")
         if file_path:
             self.iso_label.setText(f"ISO File: {file_path}")
             self.iso_file = file_path
@@ -69,10 +72,11 @@ class BootableUSBApp(QMainWindow):
         # Example: Write ISO using dd (Linux/macOS example)
         try:
             self.progress.setValue(0)
-            subprocess.run(
-                ["dd", f"if={iso_file}", f"of={selected_drive.split(' ')[-1]}", "bs=4M", "status=progress"],
-                check=True
-            )
+            subprocess.run([
+                "dd", f"if={iso_file}", f"of={selected_drive.split(' ')[-1]}",
+                "bs=4M", "status=progress"
+            ],
+                           check=True)
             self.progress.setValue(100)
             self.iso_label.setText("Bootable USB Created Successfully!")
         except subprocess.CalledProcessError as e:
@@ -84,4 +88,3 @@ if __name__ == "__main__":
     window = BootableUSBApp()
     window.show()
     sys.exit(app.exec_())
-
